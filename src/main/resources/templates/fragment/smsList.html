@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<div th:fragment="smsList (isFinished, list)">
+    <table class="table" th:classappend="!${isFinished} ? 'table-striped'">
+        <tr>
+            <th>id</th>
+            <th>номер</th>
+            <th>текст</th>
+            <th>дата получения</th>
+            <th>статус</th>
+            <th>обращений</th>
+            <th>информация</th>
+            <th>действия</th>
+        </tr>
+        <tr th:each="sms: ${list}" th:class="${sms.status} == 'delivered' ? 'success'"
+            th:classappend="(${sms.status} == 'notdelivered') ? 'warning'">
+            <td th:text="${sms.msid}"></td>
+            <td th:text="${sms.phone}"></td>
+            <td th:text="${sms.text}"></td>
+            <td th:text="${sms.date}"></td>
+            <td th:text="${sms.status}"></td>
+            <td th:text="${sms.touchCount}"></td>
+            <td th:text="${sms.info}"></td>
+            <td>
+                <div class="btn-group" role="group" style="display: flex;" aria-label="...">
+                    <a class="btn  btn-danger" th:href="@{'/sms/delete/' + ${sms.msid}}">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </a>
+                        <a class="btn btn-success" th:if="!${isFinished} or ${sms.status} == 'notdelivered'"
+                           th:href="@{'/sms/change/{id}/true'(id=${sms.msid})}">
+                            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+
+                        </a>
+                        <a class="btn btn-warning" th:if="!${isFinished} or ${sms.status} == 'delivered'"
+                           th:href="@{'/sms/change/{id}/false'(id=${sms.msid})}">
+                            <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+                        </a>
+
+                </div>
+
+
+            </td>
+
+        </tr>
+    </table>
+</div>
+</body>
+</html>
