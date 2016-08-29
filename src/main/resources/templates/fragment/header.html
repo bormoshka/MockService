@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<ul class="nav navbar-nav" th:fragment="index">
+    <li><a th:href="@{sms/}">SMS</a></li>
+</ul>
+<ul class="nav navbar-nav" th:fragment="sms">
+    <a class="btn navbar-btn btn-danger" th:href="@{'/sms/delete-all'}">
+        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Удалить все</a>
+    <a class="btn navbar-btn btn-success" th:href="@{'/sms/change-all/true'}">
+        <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Все доставлены</a>
+    <a class="btn navbar-btn btn-warning" th:href="@{'/sms/change-all/false'}">
+        <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Все не доставлены</a>
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+           aria-expanded="false">
+            Режим автоизменения статуса <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li class="configChange" data-value="off">
+                <a id="config_AutoChangeVal_off" href="#">
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true" style="display: none"></span>
+                    Выключен
+                </a>
+            </li>
+            <li class="configChange" data-value="success">
+                <a id="config_AutoChangeVal_success" href="#">
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true" style="display: none"></span>
+                    Успешный
+                </a>
+            </li>
+            <li class="configChange" data-value="fail">
+                <a id="config_AutoChangeVal_fail" href="#">
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true" style="display: none"></span>
+                    Неуспешный
+                </a>
+            </li>
+            <li class="configChange" data-value="random">
+                <a id="config_AutoChangeVal_random" href="#">
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true" style="display: none"></span>
+                    Рандомно
+                </a>
+            </li>
+        </ul>
+    </li>
+</ul>
+</body>
+</html>
