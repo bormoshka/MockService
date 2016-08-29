@@ -23,7 +23,6 @@
     <![endif]-->
     <script th:src="@{'/assets/js/jquery.min.js'}"></script>
     <script th:src="@{'/assets/js/bootstrap.min.js'}"></script>
-    <script th:src="@{'/assets/js/main.js'}"></script>
     <script th:replace="fragment/variables"></script>
 </head>
 
@@ -34,82 +33,24 @@
             <a class="navbar-brand" href="#">
                 MOCK SERVICE
             </a>
-            <a class="btn navbar-btn btn-danger" th:href="@{'/sms/delete-all'}">
-                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Удалить все</a>
-            <a class="btn navbar-btn btn-success" th:href="@{'/sms/change-all/true'}">
-                <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Все доставлены</a>
-            <a class="btn navbar-btn btn-warning" th:href="@{'/sms/change-all/false'}">
-                <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Все не доставлены</a>
         </div>
-
-        <ul class="nav navbar-nav">
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                   aria-expanded="false">
-                    Режим автоизменения статуса <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li class="configChange" data-value="off">
-                        <a id="config_AutoChangeVal_off" href="#">
-                            <span class="glyphicon glyphicon-ok" aria-hidden="true" style="display: none"></span>
-                            Выключен
-                        </a>
-                    </li>
-                    <li class="configChange" data-value="success">
-                        <a id="config_AutoChangeVal_success" href="#">
-                            <span class="glyphicon glyphicon-ok" aria-hidden="true" style="display: none"></span>
-                            Успешный
-                        </a>
-                    </li>
-                    <li class="configChange" data-value="fail">
-                        <a id="config_AutoChangeVal_fail" href="#">
-                            <span class="glyphicon glyphicon-ok" aria-hidden="true" style="display: none"></span>
-                            Неуспешный
-                        </a>
-                    </li>
-                    <li class="configChange" data-value="random">
-                        <a id="config_AutoChangeVal_random" href="#">
-                            <span class="glyphicon glyphicon-ok" aria-hidden="true" style="display: none"></span>
-                            Рандомно
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
     </div>
 </nav>
 
 <div class="container">
     <div class="row">
         <div class="col-xs-12 col-lg-12">
-            <div id="msgError" class="alert alert-warning alert-dismissible" style="display: none;" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
-                <span class="text"></span>
-            </div>
-            <div id="msgSuccess" class="alert alert-success alert-dismissible" style="display: none;" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
-                <span class="text"></span>
-            </div>
-            <h2>SMS "в обработке":</h2>
-
-            <div class="row">
-                <div class="col-xs-12 col-lg-12">
-                    <div th:replace="fragment/smsList :: smsList (isFinished=false, list=${smsList}, tableID='itemsNew')">
-                        <span>wut</span>
-                    </div>
-                </div>
-            </div>
-            <h2>SMS с финальным статусом: </h2>
-
-            <div class="row">
-                <div class="col-xs-12 col-lg-12">
-                    <div th:replace="fragment/smsList :: smsList (isFinished=true, list=${smsListOther}, tableID='itemsProcessed')">
-
-                    </div>
-                </div>
-            </div>
+            <h1>Spring MVC Endpoints</h1>
+                <table class="table table-striped">
+                    <tr>
+                        <th>Method</th>
+                        <th>URL patterns</th>
+                    </tr>
+                    <tr th:each="item: ${handlerMethods}" >
+                        <td class="value" th:text="${item.value}"></td>
+                        <td th:text="${item.key.patternsCondition.patterns}"></td>
+                    </tr>
+                </table>
         </div>
     </div>
 </div>

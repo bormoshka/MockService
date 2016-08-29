@@ -1,10 +1,8 @@
-package ru.bormoshka.mock;
+package ru.bormoshka.mock.sms;
 
 import com.google.gson.Gson;
-import com.mongodb.util.JSON;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -62,7 +60,7 @@ public class SMSController {
     @RequestMapping(method = RequestMethod.GET, value = "ping")
     public ModelAndView ping() throws UnsupportedEncodingException {
         logger.debug("Ping message received! ");
-        ModelAndView model = new ModelAndView("index");
+        ModelAndView model = new ModelAndView("sms/index");
         List<SmsModel> lst = dao.getUnfinished();
         model.addObject("smsList", lst);
         List<SmsModel> lst2 = dao.getFinished();
