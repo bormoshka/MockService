@@ -3,8 +3,8 @@
 <head>
 </head>
 <body>
-<div th:fragment="smsList (isFinished, list)">
-    <table class="table" th:classappend="!${isFinished} ? 'table-striped'">
+<div th:fragment="smsList (isFinished, list, tableID)">
+    <table th:id="${tableID}" class="table" th:classappend="!${isFinished} ? 'table-striped'">
         <tr>
             <th>id</th>
             <th>номер</th>
@@ -15,35 +15,31 @@
             <th>информация</th>
             <th>действия</th>
         </tr>
-        <tr th:each="sms: ${list}" th:class="${sms.status} == 'delivered' ? 'success'"
-            th:classappend="(${sms.status} == 'notdelivered') ? 'warning'">
-            <td th:text="${sms.msid}"></td>
-            <td th:text="${sms.phone}"></td>
-            <td th:text="${sms.text}"></td>
-            <td th:text="${sms.date}"></td>
-            <td th:text="${sms.status}"></td>
-            <td th:text="${sms.touchCount}"></td>
-            <td th:text="${sms.info}"></td>
+        <tr th:id="'line_' + ${sms.msid}" th:each="sms: ${list}" class="contentLine">
+            <td class="msid" th:text="${sms.msid}"></td>
+            <td class="phone" th:text="${sms.phone}"></td>
+            <td class="text" th:text="${sms.text}"></td>
+            <td class="date" th:text="${sms.date}"></td>
+            <td class="status" th:text="${sms.status}"></td>
+            <td class="touchCount" th:text="${sms.touchCount}"></td>
+            <td class="infoCol" th:text="${sms.info}"></td>
             <td>
                 <div class="btn-group" role="group" style="display: flex;" aria-label="...">
-                    <a class="btn  btn-danger" th:href="@{'/sms/delete/' + ${sms.msid}}">
+                    <a class="btn btn-danger btn-delete" th:href="@{'/sms/delete/' + ${sms.msid}}">
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                     </a>
-                        <a class="btn btn-success" th:if="!${isFinished} or ${sms.status} == 'notdelivered'"
-                           th:href="@{'/sms/change/{id}/true'(id=${sms.msid})}">
-                            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
-
-                        </a>
-                        <a class="btn btn-warning" th:if="!${isFinished} or ${sms.status} == 'delivered'"
-                           th:href="@{'/sms/change/{id}/false'(id=${sms.msid})}">
-                            <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
-                        </a>
-
+                    <a class="btn btn-success"
+                       th:if="!${isFinished} or ${sms.status} == 'notdelivered' or ${sms.status} == 'notsent'"
+                       th:href="@{'/sms/change/{id}/true'(id=${sms.msid})}">
+                        <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                    </a>
+                    <a class="btn btn-warning"
+                       th:if="!${isFinished} or ${sms.status} == 'delivered' or ${sms.status} == 'sent'"
+                       th:href="@{'/sms/change/{id}/false'(id=${sms.msid})}">
+                        <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+                    </a>
                 </div>
-
-
             </td>
-
         </tr>
     </table>
 </div>

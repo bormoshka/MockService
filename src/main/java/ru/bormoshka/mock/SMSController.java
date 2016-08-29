@@ -1,7 +1,10 @@
 package ru.bormoshka.mock;
 
+import com.google.gson.Gson;
+import com.mongodb.util.JSON;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,10 +26,10 @@ import java.util.Random;
 public class SMSController {
     final static Logger logger = Logger.getLogger(SMSController.class);
     private static volatile long nextID = -1;
+    private final SmsDAO dao;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
     private Random rand = new Random();
-
-    private final SmsDAO dao;
+    private static Gson gson = new Gson();
 
     @Autowired
     public SMSController(SmsDAO dao) {
@@ -74,10 +77,57 @@ public class SMSController {
         return "redirect:/sms/ping";
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "delete/{msid}", produces = "text/json")
+    @ResponseBody
+    public String deletePost(@PathVariable(value = "msid") String msid) throws UnsupportedEncodingException {
+        logger.debug("delete! ");
+        dao.delete(msid);
+        return "{\"ok\": \"true\"}";
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "delete/{msid}")
     public String delete(@PathVariable(value = "msid") String msid) throws UnsupportedEncodingException {
         logger.debug("delete! ");
         dao.delete(msid);
+        return "redirect:/sms/ping";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "change/{msid}/{success}", produces = "text/json")
+    @ResponseBody
+    public String changePost(@PathVariable(value = "msid") String msid,
+                             @PathVariable(value = "success") Boolean success) throws UnsupportedEncodingException {
+        logger.debug("change! ");
+        List<SmsModel> models = dao.find(msid);
+        if (success == null) {
+            success = true;
+        }
+        for (SmsModel model : models) {
+            model.setStatus(success ? SmsStatus.DELIVERED.getCode() : SmsStatus.NOTDELIVERED.getCode());
+            dao.updateStatus(model);
+        }
+        return "{\"ok\": \"true\", \"status\": \"" + success +"\", \"model\": " + gson.toJson(models.get(0)) + "}";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "get/{msid}", produces = "text/json")
+    @ResponseBody
+    public String getModel(@PathVariable(value = "msid") String msid) throws UnsupportedEncodingException {
+        logger.debug("change! ");
+        List<SmsModel> models = dao.find(msid);
+        return gson.toJson(models.get(0));
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "change/{msid}/{success}")
+    public String change(@PathVariable(value = "msid") String msid,
+                         @PathVariable(value = "success") Boolean success) throws UnsupportedEncodingException {
+        logger.debug("change! ");
+        List<SmsModel> models = dao.find(msid);
+        if (success == null) {
+            success = true;
+        }
+        for (SmsModel model : models) {
+            model.setStatus(success ? SmsStatus.DELIVERED.getCode() : SmsStatus.NOTDELIVERED.getCode());
+            dao.updateStatus(model);
+        }
         return "redirect:/sms/ping";
     }
 
@@ -99,18 +149,13 @@ public class SMSController {
         return "redirect:/sms/ping";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "change/{msid}/{success}")
-    public String change(@PathVariable(value = "msid") String msid, @PathVariable(value = "success") Boolean success) throws UnsupportedEncodingException {
-        logger.debug("change! ");
-        List<SmsModel> models = dao.find(msid);
-        if (success == null) {
-            success = true;
-        }
-        for (SmsModel model : models) {
-            model.setStatus(success ? SmsStatus.DELIVERED.getCode() : SmsStatus.NOTDELIVERED.getCode());
-            dao.updateStatus(model);
-        }
-        return "redirect:/sms/ping";
+    @RequestMapping(method = RequestMethod.GET, value = "GetMessageStatus", produces = "text/xml")
+    @ResponseBody
+    public String getMessageStatusGET(@RequestBody String requestBody,
+                                   @RequestParam String messageid,
+                                   @RequestParam String login,
+                                   @RequestParam String password) throws UnsupportedEncodingException {
+        return getMessageStatus(requestBody, messageid, login, password);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "GetMessageStatus", produces = "text/xml")
