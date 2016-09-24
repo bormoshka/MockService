@@ -5,6 +5,7 @@ import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import ru.bormoshka.dao.model.SmsModel;
 
+@SuppressWarnings("unchecked")
 public class SmsCodecProvider implements CodecProvider {
     @Override
     public <T> Codec<T> get(Class<T> aClass, CodecRegistry codecRegistry) {
