@@ -1,0 +1,37 @@
+group 'ru.bormoshka.mock'
+version '1.0'
+
+apply plugin: 'war'
+apply plugin: 'java'
+apply plugin: 'spring-boot'
+
+defaultTasks 'jar', 'war'
+
+bootRepackage {
+    mainClass = mainClassName
+}
+
+war {
+    mods.each { it.getValue().each { dependsOn "${it.path}:build" } }
+    baseName = 'MockService'
+    version = rootProject.version
+    dependencies {
+        compile mods.core,
+                mods.plugins
+        providedCompile "org.springframework.boot:spring-boot-starter-tomcat"
+        //,"org.javassist:javassist"
+    }
+}
+
+jar {
+    //mods.each { it.getValue().each { dependsOn "${it.path}:build" } }
+    archiveName = 'MockService.jar'
+    version = rootProject.version
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    dependencies {
+        compile mods.core,
+                mods.plugins
+    }
+}

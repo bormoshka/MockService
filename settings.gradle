@@ -1,1 +1,5 @@
 rootProject.name = 'MockService'
+include 'core',
+        'plugins:sms',
+        'assembly'
+

@@ -1,42 +1,38 @@
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'spring-boot'
-apply from: "repositories.gradle"
-
-group = 'ru.bormoshka'
+group = 'ru.bormoshka.mock'
 version = '1.0'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-buildscript {
+apply plugin: 'idea'
+apply from: 'repositories.gradle', to: allprojects
 
+buildscript {
     ext {
         springBootVersion = "1.4.0.RELEASE"
         springThymeleafVersion = "3.0.1.RELEASE"
+        mainClassName = 'ru.bormoshka.mock.system.Application'
+        libs = [
+                springBoot: [
+                        "org.springframework.boot:spring-boot-starter-web:${springBootVersion}",
+                        "org.springframework.boot:spring-boot-devtools:${springBootVersion}",
+                        "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}",
+                        "org.springframework.boot:spring-boot-starter-thymeleaf:${springBootVersion}",
+                        "org.springframework.boot:spring-boot-starter-tomcat:${springBootVersion}"
+                ],
+                mongo     : "org.mongodb:mongo-java-driver:3.3.0",
+                gson      : "com.google.code.gson:gson:2.7",
+                javax     : "javax.servlet:javax.servlet-api:3.0.1",
+                junit     : 'junit:junit:4.11'
+        ]
+        mods = [core   : [project(':core')],
+                plugins: [project(":plugins:sms")]]
     }
 
-    apply from: "repositories.gradle", to: buildscript
+    apply from: 'repositories.gradle', to: buildscript
 
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
-
-dependencies {
-    compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}",
-            "org.springframework.boot:spring-boot-starter-tomcat:${springBootVersion}",
-            "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}",
-            "org.springframework.boot:spring-boot-starter-thymeleaf:${springBootVersion}",
-            "org.springframework.boot:spring-boot-devtools:${springBootVersion}",
-            //"org.thymeleaf:thymeleaf-spring4:${springThymeleafVersion}",
-            "org.mongodb:mongo-java-driver:3.3.0",
-            "com.google.code.gson:gson:2.7"
-    compileOnly "javax.servlet:javax.servlet-api:3.0.1"
-    testCompile 'junit:junit:4.11'
-}
-
-
-//sourceCompatibility = 1.8
-//targetCompatibility = 1.8

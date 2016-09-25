@@ -1,0 +1,14 @@
+group 'ru.bormoshka.mock'
+version rootProject.version
+
+apply plugin: 'java'
+apply plugin: 'maven'
+
+dependencies {
+    compile libs.springBoot,
+            libs.gson,
+            libs.mongo
+    compileOnly mods.core,
+            libs.javax
+    testCompile libs.junit
+}
